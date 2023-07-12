@@ -1,0 +1,7 @@
+*.docx
+*.csv
+*.h5
+*.jpg
+*.mat
+*.pyc
+dataReaderOsie.py
