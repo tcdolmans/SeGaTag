@@ -2,7 +2,7 @@
  * @author [Tenzing Dolmans]
  * @email [t.c.dolmans@gmail.com]
  * @create date 2023-05-11 12:06:29
- * @modify date 21-08-2023 11:02:50
+ * @modify date 21-08-2023 12:57:39
  * @desc [description]
 """
 import glob
@@ -330,6 +330,6 @@ if __name__ == "__main__":
     for et_file in et_files:
         # TODO: The padding value should depend on the calibration results instead of one value.
         # Some digging needs to be done in the h5 files, which I don't have time for now.
-        # The padding value is the radius of the circle around the gaze point that is considered in pixels.
+        # The padding value is the radius of the circle around the gaze point, in # of pixels.
         padding = 5
         extract_et(et_file, img_names, labels, padding, save_raw_gaze=True)
