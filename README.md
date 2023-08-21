@@ -14,6 +14,9 @@ Also some other useful info, like the number of consecutive and total NaNs.
 
 
 ## Semantic label categories
+These are the categories of the OSIE labels, as described in https://jov.arvojournals.org/article.aspx?articleid=2193943.
+The [osieLabels] folder contains a .mat file for each of the photos in the OSIE set. Each dimension of the .mat file contains a matrix with
+pixel maps for the categories described below. Loaded by 'load_sem_data' in 'utils.py'.
 | Index | Category     | Description                                                                                             |
 |-------|--------------|---------------------------------------------------------------------------------------------------------|
 | 0     | Face         | Back, profile, and frontal faces.                                                                       |
