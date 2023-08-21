@@ -2,7 +2,7 @@
  * @author [Tenzing Dolmans]
  * @email [t.c.dolmans@gmail.com]
  * @create date 2023-05-11 12:06:29
- * @modify date 21-08-2023 12:57:39
+ * @modify date 21-08-2023 14:46:17
  * @desc [description]
 """
 import glob
@@ -10,7 +10,24 @@ import os
 
 import numpy as np
 import pandas as pd
-from utils import load_sem_data
+import scipy.io as sio
+
+
+def load_sem_data(sem_folder="osieLabels", sem_extension="*.mat"):
+    """
+    Load semantic labels from the OSIE dataset.
+    Inputs:
+    - sem_folder: folder containing the semantic labels
+    Outputs:
+    - labels: tensor containing all semantic labels
+    """
+    sem_paths = sorted(glob.glob(os.path.join(sem_folder, sem_extension)))
+    labels = []
+    for sem_path in sem_paths:
+        # Load semantic labels and convert to tensor
+        sem_mat = sio.loadmat(sem_path).get("data")
+        labels.append(sem_mat)
+    return labels
 
 
 def get_gaze_rows(gaze, msg, img):

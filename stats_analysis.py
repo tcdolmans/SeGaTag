@@ -1,8 +1,10 @@
-import os
 import ast
 import glob
+import os
+
 import pandas as pd
 from scipy.stats import f_oneway, friedmanchisquare
+
 
 def group_stats(sem_files):
     dataframes = []
@@ -12,7 +14,8 @@ def group_stats(sem_files):
         dataframes.append(current)
     for df in dataframes:
         salience_by_participant.append(
-            df['relative_salience'].apply(lambda x: ast.literal_eval(x)).tolist())
+            df["relative_salience"].apply(lambda x: ast.literal_eval(x)).tolist()
+        )
     # Perform the ANOVA test
     f_value, p_value = f_oneway(*salience_by_participant)
     print("ANOVA test results:")
@@ -31,7 +34,7 @@ def indiv_stats(sem_files):
     for participant in range(6):
         salience_by_session.append([])
         for df in dataframes:
-            sessions = df[df['participant_number'] == participant]['relative_salience']
+            sessions = df[df["participant_number"] == participant]["relative_salience"]
             salience_by_session[participant].append(sessions)
 
     # Perform the repeated measures ANOVA test
@@ -40,8 +43,9 @@ def indiv_stats(sem_files):
     print("F-value:", f_value)
     print("p-value:", p_value)
 
+
 if __name__ == "__main__":
     base_path = os.getcwd()
-    sem = os.path.join(base_path, '..', 'semPreProc')
-    sem_files = sorted(glob.glob(os.path.join(sem, '*.csv')))
+    sem = os.path.join(base_path, "..", "semPreProc")
+    sem_files = sorted(glob.glob(os.path.join(sem, "*.csv")))
     group_stats(sem_files)

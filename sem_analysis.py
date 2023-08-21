@@ -2,7 +2,7 @@
  * @author [Tenzing Dolmans]
  * @email [t.c.dolmans@gmail.com]
  * @create date 2023-06-30 17:23:28
- * @modify date 21-08-2023 12:56:50
+ * @modify date 21-08-2023 15:31:35
  * @desc [description]
 """
 import ast
@@ -194,10 +194,10 @@ def plot_spider_chart(participant_dict, to_plot="rs"):
     if not to_plot == "rs" or to_plot == "sem":
         raise ValueError("to_plot must be either 'rs' or 'sem'")
     for key in participant_dict.keys():
-        to_plot = participant_dict[key][to_plot]
+        plot_data = participant_dict[key][to_plot]
 
         # Number of variables
-        num_vars = len(to_plot)
+        num_vars = len(plot_data)
 
         # Calculate angles for each variable
         angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
@@ -206,7 +206,7 @@ def plot_spider_chart(participant_dict, to_plot="rs"):
         # Create the spider chart plot
         fig, ax = plt.subplots(figsize=(6, 6), subplot_kw={"polar": True})
         ax.fill(
-            angles, to_plot, color="skyblue", alpha=0.5
+            angles, plot_data, color="skyblue", alpha=0.5
         )  # Fill the area inside the chart
 
         # Set the labels for each variable
@@ -225,22 +225,43 @@ def plot_spider_chart(participant_dict, to_plot="rs"):
 
 
 if __name__ == "__main__":
+    # File paths, please read the readme for more information on the folder structure
     base_path = os.getcwd()
-    sem = os.path.join(base_path, "..", "semPreProc")
+    sem = os.path.join(base_path, "semPreProc")
     sem_files = sorted(glob.glob(os.path.join(sem, "*.csv")))
 
-    # master = generate_master_sample(sem_files)
-    # # print(len(master))
-    # # for sample in master:
-    # #     print(sample[''])
-    # face_subset = [sample for sample in master if sample["dim_pres"][0] > 0]
-    # # print unique values for p_num in face_subset
-    # unique_p_nums, unique_sessions, unique_imgs = get_unique_values(
-    #     face_subset, verbose=False
-    # )
+    master = generate_master_sample(sem_files)
+    # print some info about the master sample
+    print("Master sample length:", len(master))
+    print("Master sample keys:", master[0].keys())
 
-    # for p_num in unique_p_nums:
-    #     print(len(face_subset["p_num"] == int(p_num)))
-    # # unique_p_nums, unique_sessions, unique_imgs = get_unique_values(master, verbose=True)
+    # Extract unique values. This is useful for slicing the master sample.
+    # Please read get_unique_values() for more information. Also expand it!
+    unique_p_nums, unique_sessions, unique_imgs = get_unique_values(
+        master, verbose=False
+    )
+    print("Number of unique participants:", len(unique_p_nums))
+    print("Number of unique sessions:", len(unique_sessions))
+    print("Number of unique images:", len(unique_imgs))
+
+    # You can subset the master sample by any of the categories as described in the readme.
+    # For example, to get all samples where the face dimension is present:
+    # face:        sample["dim_pres"][0] > 0
+    # # or motion: sample["dim_pres"][4] > 0, etc.
+    face_subset = [sample for sample in master if sample["dim_pres"][0] > 0]
+    motion_subset = [sample for sample in master if sample["dim_pres"][4] > 0]
+
+    # Then, rerun the get_unique_values() function to get the unique values for the subset
+    unique_p_nums, unique_sessions, unique_imgs = get_unique_values(
+        motion_subset, verbose=False
+    )
+    # And print information about the subset
+    print("Number of unique participants:", len(unique_p_nums))
+    print("Number of unique sessions:", len(unique_sessions))
+    print("Number of unique images:", len(unique_imgs))
+
     participant_dict = extract_sem_rs(sem_files, mode="participant")
-    plot_spider_chart(participant_dict)
+    print("Participant dictionary keys:")
+    for key in participant_dict.keys():
+        print(key)
+    plot_spider_chart(participant_dict, to_plot="rs")

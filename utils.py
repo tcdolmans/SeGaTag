@@ -2,20 +2,21 @@
  * @author [Tenzing Dolmans]
  * @email [t.c.dolmans@gmail.com]
  * @create date 2023-05-11 12:08:55
- * @modify date 2023-05-11 12:08:55
+ * @modify date 21-08-2023 14:41:54
  * @desc [description]
 """
-import os
 import glob
-import torch
-import scipy
-import numpy as np
-from PIL import Image
-import scipy.io as sio
+import os
+
 import matplotlib.pyplot as plt
+import numpy as np
+import scipy
+import scipy.io as sio
+import torch
+from PIL import Image
+
 
 def replace_nans(input_tensor, threshold=0.85):
-
     def pad(data):
         bad_indexes = np.isnan(data)
         good_indexes = np.logical_not(bad_indexes)
@@ -38,9 +39,12 @@ def replace_nans(input_tensor, threshold=0.85):
         elif len(good_data) / len(data) < threshold:
             # print("Sample Rejected: ", len(good_data) / len(data))
             return False
-        interpolated = np.interp(bad_indexes.nonzero()[0], good_indexes.nonzero()[0], good_data)
+        interpolated = np.interp(
+            bad_indexes.nonzero()[0], good_indexes.nonzero()[0], good_data
+        )
         data[bad_indexes] = interpolated
         return data
+
     output = torch.tensor(np.apply_along_axis(pad, 0, input_tensor))
     return output
 
@@ -52,18 +56,18 @@ def downsample(input_tensor, dsf=10):
     """
     ds_t = []
     for i in range(0, len(input_tensor), dsf):
-        selection = stats.mode(input_tensor[i: i+dsf], axis=0, keepdims=True)[0][0]
+        selection = stats.mode(input_tensor[i : i + dsf], axis=0, keepdims=True)[0][0]
         ds_t.append(torch.tensor(np.array(selection)).unsqueeze(0))
     return torch.cat(ds_t)
 
 
 def retrieve_semantic_label(file):
     mat = sio.loadmat(file)
-    mat = np.array(mat['data'])
+    mat = np.array(mat["data"])
     return mat
 
 
-def load_sem_data(sem_folder='osieLabels', sem_extension='*.mat'):
+def load_sem_data(sem_folder="osieLabels", sem_extension="*.mat"):
     """
     Load semantic labels from the OSIE dataset.
     Inputs:
@@ -75,17 +79,17 @@ def load_sem_data(sem_folder='osieLabels', sem_extension='*.mat'):
     labels = []
     for sem_path in sem_paths:
         # Load semantic labels and convert to tensor
-        sem_mat = scipy.io.loadmat(sem_path).get('data')
+        sem_mat = scipy.io.loadmat(sem_path).get("data")
         labels.append(sem_mat)
     return labels
 
 
-def load_img_data(img_folder='osieImgs', img_extension='*.jpg'):
+def load_img_data(img_folder="osieImgs", img_extension="*.jpg"):
     img_paths = sorted(glob.glob(os.path.join(img_folder, img_extension)))
     imgs = []
     for img_path in img_paths:
         # Load image and append to list
-        img = Image.open(img_path).convert('RGB').numpy()
+        img = Image.open(img_path).convert("RGB").numpy()
         imgs.append(img)
     return imgs
 
@@ -141,6 +145,7 @@ def topk_accuracy(true_labels, pred_labels, k=5):
 if __name__ == "__main__":
     current_path = os.path.abspath(
         os.path.join(
-            os.path.dirname(__file__),
-            '..', '..', '..', 'Data', 'GazeBase', 'Data'))
+            os.path.dirname(__file__), "..", "..", "..", "Data", "GazeBase", "Data"
+        )
+    )
     file_list = list_files_recursively(current_path)
