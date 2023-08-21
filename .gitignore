@@ -3,4 +3,6 @@
 *.h5
 *.jpg
 *.pyc
+.gitignore
+utils.py
 dataReaderOsie.py
