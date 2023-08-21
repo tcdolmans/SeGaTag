@@ -43,3 +43,9 @@ src
  - SeGaTag (contains all code in this repo)
  - semPreProc (will contain outputs after running `convert_osie.py`)
     - raw (will contain raw outputs if the flag is set `True`)
+
+## Example Visualisations
+<p float="left">
+  <img src="./s003.png" width="45%" />
+  <img src="./s013.png" width="45%" /> 
+</p>
