@@ -42,6 +42,6 @@ def indiv_stats(sem_files):
 
 if __name__ == "__main__":
     base_path = os.getcwd()
-    sem = os.path.join(base_path, 'semPreProc')
+    sem = os.path.join(base_path, '..', 'semPreProc')
     sem_files = sorted(glob.glob(os.path.join(sem, '*.csv')))
     group_stats(sem_files)

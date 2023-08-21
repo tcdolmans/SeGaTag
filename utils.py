@@ -89,6 +89,7 @@ def load_img_data(img_folder='osieImgs', img_extension='*.jpg'):
         imgs.append(img)
     return imgs
 
+
 def split_tensor(tensor, sampling_rate=100, selection_length=3):
     """
     Splits every input tensor into multiple usable sections.
